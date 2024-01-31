@@ -15,7 +15,6 @@ const TodoSchema = z.object({
 
 const CreateTodo = TodoSchema.omit({ id: true, isCompleted: true, createdAt: true });
 const UpdateTodo = TodoSchema.omit({ createdAt: true });
-const DeleteTodo = TodoSchema.omit({ isCompleted: true, createdAt: true, title: true })
 
 export async function createTodo(formData: FormData) {
 
@@ -26,7 +25,7 @@ export async function createTodo(formData: FormData) {
             title: title,
             isCompleted: '0'
         }
-    })
+    });
 
     revalidatePath('/');
     redirect('/');
@@ -38,25 +37,25 @@ export async function updateTodo(formData: FormData) {
 
     await prisma.todo.update({
         where: {
-            id: id
+            id: String(id)
         },
         data: {
             title: title,
             isCompleted: isCompleted
         }
-    })
+    });
 
     revalidatePath('/');
     redirect('/');
 }
 
-export async function deleteTodo(id: number) {
+export async function deleteTodo(id: string) {
 
     await prisma.todo.delete({
         where: {
             id: id
         }
-    })
+    });
 
     revalidatePath('/');
 }
